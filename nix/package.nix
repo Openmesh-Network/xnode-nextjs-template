@@ -1,11 +1,13 @@
-{ pkgs }:
+{ pkgs, lib }:
 pkgs.buildNpmPackage {
   pname = "xnode-nextjs-template";
   version = "1.0.0";
   src = ../nextjs-app;
 
-  # FIXME: this needs to be updated every time the package-lock.json changes
-  npmDepsHash = "sha256-o34A/bLD4ulGif4K9Qltefo5/U9U4pCDemGhLvIlyHY=";
+  npmDeps = pkgs.importNpmLock {
+    npmRoot = ../nextjs-app;
+  };
+  npmConfigHook = pkgs.importNpmLock.npmConfigHook;
 
   postBuild = ''
     # Add a shebang to the server js file, then patch the shebang to use a
