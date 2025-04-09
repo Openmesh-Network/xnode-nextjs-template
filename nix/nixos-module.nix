@@ -42,6 +42,12 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    users.groups.xnode-nextjs-template = { };
+    users.users.xnode-nextjs-template = {
+      isSystemUser = true;
+      group = "xnode-nextjs-template";
+    };
+
     systemd.services.xnode-nextjs-template = {
       wantedBy = [ "multi-user.target" ];
       description = "Nextjs App.";
@@ -52,7 +58,8 @@ in
       };
       serviceConfig = {
         ExecStart = "${lib.getExe xnode-nextjs-template}";
-        DynamicUser = true;
+        User = "xnode-nextjs-template";
+        Group = "xnode-nextjs-template";
         CacheDirectory = "nextjs-app";
       };
     };
