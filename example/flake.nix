@@ -1,53 +1,29 @@
 {
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    xnode-nextjs-template.url = "github:Openmesh-Network/xnode-nextjs-template";
+    xnode-manager.url = "github:Openmesh-Network/xnode-manager";
+    xnode-nextjs-template.url = "github:OpenxAI-Network/xnode-nextjs-template"; # "path:..";
+    nixpkgs.follows = "xnode-nextjs-template/nixpkgs";
   };
 
-  outputs =
-    {
-      self,
-      nixpkgs,
-      xnode-nextjs-template,
-      ...
-    }:
-    let
-      system = "x86_64-linux";
-    in
-    {
-      nixosConfigurations.container = nixpkgs.lib.nixosSystem {
-        inherit system;
-        specialArgs = {
-          inherit xnode-nextjs-template;
-        };
-        modules = [
-          (
-            { xnode-nextjs-template, ... }:
-            {
-              imports = [
-                xnode-nextjs-template.nixosModules.default
-              ];
-
-              boot.isContainer = true;
-
-              services.xnode-nextjs-template = {
-                enable = true;
-              };
-
-              networking = {
-                firewall.allowedTCPPorts = [
-                  3000
-                ];
-
-                useHostResolvConf = nixpkgs.lib.mkForce false;
-              };
-
-              services.resolved.enable = true;
-
-              system.stateVersion = "25.05";
-            }
-          )
-        ];
+  outputs = inputs: {
+    nixosConfigurations.container = inputs.nixpkgs.lib.nixosSystem {
+      specialArgs = {
+        inherit inputs;
       };
+      modules = [
+        inputs.xnode-manager.nixosModules.container
+        {
+          services.xnode-container.xnode-config = {
+            host-platform = ./xnode-config/host-platform;
+            state-version = ./xnode-config/state-version;
+            hostname = ./xnode-config/hostname;
+          };
+        }
+        inputs.xnode-nextjs-template.nixosModules.default
+        {
+          services.xnode-nextjs-template.enable = true;
+        }
+      ];
     };
+  };
 }
