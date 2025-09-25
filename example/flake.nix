@@ -1,7 +1,7 @@
 {
   inputs = {
     xnode-manager.url = "github:Openmesh-Network/xnode-manager";
-    xnode-nextjs-template.url = "github:OpenxAI-Network/xnode-nextjs-template"; # "path:..";
+    xnode-nextjs-template.url = "github:Openmesh-Network/xnode-nextjs-template"; # "path:..";
     nixpkgs.follows = "xnode-nextjs-template/nixpkgs";
   };
 

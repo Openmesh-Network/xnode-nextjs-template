@@ -11,11 +11,11 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "next": "^14.2.15"
+    "next": "^15.5.4"
   },
   "devDependencies": {
-    "@types/node": "^22.7.5",
-    "@types/react": "^18.3.11",
-    "typescript": "^5.6.3"
+    "@types/node": "^24.5.2",
+    "@types/react": "^19.1.13",
+    "typescript": "^5.9.2"
   }
 }
